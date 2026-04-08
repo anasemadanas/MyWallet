@@ -1,4 +1,4 @@
 package com.moneytracker.services;
 
-public class ITransactionService {
+public interface ITransactionService {
 }

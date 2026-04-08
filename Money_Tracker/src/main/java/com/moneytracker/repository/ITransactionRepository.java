@@ -1,4 +1,4 @@
 package com.moneytracker.repository;
 
-public class ITransactionRepository {
+public interface ITransactionRepository {
 }
