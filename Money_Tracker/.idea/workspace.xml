@@ -19,13 +19,13 @@
     </persistenceIdMap>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="29" />
+    <option name="cachedIndexableFilesCount" value="35" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -57,33 +57,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.DatabaseSetup.executor": "Run",
-    "Application.Main.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH": "215",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.obroom.plugin.toolset:Regex:Tester:letf": "",
-    "com.obroom.plugin.toolset:Regex:Tester:replaceTemplate": "",
-    "com.obroom.plugin.toolset:Regex:Tester:upetf": "",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "C:/Users/D4RK/Documents/Git/MyWallet/Money_Tracker/src/main/java/com/moneytracker/Main.java",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.ContactEditor.executor&quot;: &quot;Run&quot;,
+    &quot;Application.DatabaseSetup.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.frmDashBoard.executor&quot;: &quot;Run&quot;,
+    &quot;Application.frmLoginScreen.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH&quot;: &quot;215&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.obroom.plugin.toolset:Regex:Tester:letf&quot;: &quot;&quot;,
+    &quot;com.obroom.plugin.toolset:Regex:Tester:replaceTemplate&quot;: &quot;&quot;,
+    &quot;com.obroom.plugin.toolset:Regex:Tester:upetf&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/D4RK/Documents/Git/MyWallet/Money_Tracker/src/main/java/com/moneytracker/Main.java&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\D4RK\Documents\Git\MyWallet\Money_Tracker\src\main\java\com\moneytracker\ui" />
+    </key>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="c6eae824-fc32-4da9-a4f4-6e5fab704228" name="Changes" comment="" />
@@ -95,6 +103,11 @@
       <workItem from="1775591915726" duration="3750000" />
       <workItem from="1775678771039" duration="392000" />
       <workItem from="1775679195751" duration="3380000" />
+      <workItem from="1775806255179" duration="2649000" />
+      <workItem from="1775809389016" duration="535000" />
+      <workItem from="1775833076779" duration="211000" />
+      <workItem from="1775833310658" duration="128000" />
+      <workItem from="1775833898428" duration="110000" />
     </task>
     <servers />
   </component>

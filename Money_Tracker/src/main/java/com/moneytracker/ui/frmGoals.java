@@ -8,12 +8,12 @@ package com.moneytracker.ui;
  *
  * @author D4RK
  */
-public class frmAddTransaction extends javax.swing.JPanel {
+public class frmGoals extends javax.swing.JPanel {
 
     /**
-     * Creates new form frmAddTransaction
+     * Creates new form frmGoals
      */
-    public frmAddTransaction() {
+    public frmGoals() {
         initComponents();
     }
 
