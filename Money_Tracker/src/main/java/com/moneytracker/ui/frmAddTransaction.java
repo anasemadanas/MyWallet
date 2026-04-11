@@ -123,6 +123,8 @@ public class frmAddTransaction extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        System.exit(0);
+
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCloseActionPerformed
 
