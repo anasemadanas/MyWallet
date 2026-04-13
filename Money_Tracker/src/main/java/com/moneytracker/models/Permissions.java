@@ -1,4 +1,4 @@
 package com.moneytracker.models;
 
-public class Permission {
+public class Permissions {
 }

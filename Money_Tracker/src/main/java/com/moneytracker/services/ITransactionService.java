@@ -9,12 +9,13 @@ public interface ITransactionService {
 
     boolean validateTransaction(double amountTrans, int month, int year, double budget);
 
+    void editTransaction(int tid, double newAmount, int month, int year);
+    void deleteTransaction(int transactionId);
+
+    String getBudgetWarning(double amountTrans, int month, int year);
+    String getTransactionWarning(double oldAmount, double newAmount);
+
+    List<Transaction> getTransactions();
     double getBudgetBalance(int month, int year);
 
-    // -----------------------
-    List<Transaction> GetTransactions();
-
-    void editTransaction(int tid, double newAmount, int month, int year);
-
-    void deleteTransaction(int transactionId);
 }

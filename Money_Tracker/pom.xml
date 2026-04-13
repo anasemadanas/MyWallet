@@ -41,11 +41,6 @@
                 <scope>test</scope>
             </dependency>
 
-        <dependency>
-            <groupId>com.moneytracker</groupId>
-            <artifactId>money-tracker</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
 
 
     </dependencies>

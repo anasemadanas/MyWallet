@@ -7,9 +7,9 @@ public interface IGoalService {
 
     void addGoal(String name, double targetAmount, double initialSaved);
 
-    List<Goal> getAllGoals();
-
     void addSavings(int goalId, double amount);
 
     void deleteGoal(int goalId);
+
+    List<Goal> getAllGoals();
 }

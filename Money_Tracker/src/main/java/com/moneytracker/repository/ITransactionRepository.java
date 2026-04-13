@@ -7,11 +7,11 @@ public interface ITransactionRepository {
 
     void addTransaction(Transaction transaction);
 
-    List<Transaction> getTransactions();
-
     void deleteTransaction(int transactionId);
 
     void updateTransaction(int transactionId, double newAmount, int newMonth, int newYear);
+
+    List<Transaction> getTransactions();
 
     Transaction getTransactionById(int transactionId);
 
