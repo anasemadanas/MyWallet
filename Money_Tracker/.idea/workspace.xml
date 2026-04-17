@@ -19,7 +19,7 @@
     </persistenceIdMap>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="50" />
+    <option name="cachedIndexableFilesCount" value="51" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -127,6 +127,7 @@
       <workItem from="1776081359495" duration="17656000" />
       <workItem from="1776106032060" duration="570000" />
       <workItem from="1776111504782" duration="1345000" />
+      <workItem from="1776439653035" duration="43000" />
     </task>
     <servers />
   </component>
