@@ -26,6 +26,6 @@ public class Main {
             new frmLoginScreen().setVisible(true);
         });
 
-
     }
+
 }
