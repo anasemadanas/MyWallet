@@ -1,4 +1,4 @@
-package com.moneytracker.services;
+package com.moneytracker.common;
 
 public class Logger {
 }

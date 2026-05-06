@@ -25,8 +25,8 @@ public class TransactionService implements ITransactionService {
 
     // -----------------------
     @Override
-    public List<Transaction> GetTransactions(){
-        return null;
+    public List<Transaction> getTransactions(){
+     return null;
     }
 
     @Override
@@ -38,4 +38,15 @@ public class TransactionService implements ITransactionService {
     public void deleteTransaction(int transactionId){
 
     }
+    
+    @Override
+     public String getBudgetWarning(double amountTrans, int month, int year){
+         return null;
+     }
+     
+     @Override
+    public String getTransactionWarning(double oldAmount, double newAmount){
+        return null;
+    }
+
 }

@@ -1,4 +1,26 @@
 package com.moneytracker.repository;
 
-public class GoalRepository {
+import com.moneytracker.models.Goal;
+
+import java.util.List;
+
+public class GoalRepository implements IGoalRepository {
+
+    public void createGoal(String name, double targetAmount, double initialSaved){
+
+    }
+
+    public void addSavings(int goalId, double amount)
+    {
+
+    }
+    public void deleteGoal(int goalId)
+    {
+
+    }
+    public List<Goal> getAllGoals()
+    {
+    return null;
+    }
+
 }

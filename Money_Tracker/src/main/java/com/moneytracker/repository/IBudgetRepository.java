@@ -2,7 +2,7 @@ package com.moneytracker.repository;
 
 import com.moneytracker.models.Budget;
 
-public interface IBudgetRepository {
+public interface IBudgetRepository  {
 
     void createBudget(double amount, int month, int year);
     boolean checkBudget(int month, int year);
