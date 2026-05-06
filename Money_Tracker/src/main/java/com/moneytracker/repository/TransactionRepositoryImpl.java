@@ -4,7 +4,7 @@ import com.moneytracker.models.Transaction;
 
 import java.util.List;
 
-public class TransactionRepository implements ITransactionRepository {
+public class TransactionRepositoryImpl implements ITransactionRepository {
     @Override
     public void addTransaction(Transaction transaction){
 

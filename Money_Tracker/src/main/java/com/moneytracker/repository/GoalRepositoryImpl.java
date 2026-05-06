@@ -4,7 +4,7 @@ import com.moneytracker.models.Goal;
 
 import java.util.List;
 
-public class GoalRepository implements IGoalRepository {
+public class GoalRepositoryImpl implements IGoalRepository {
 
     public void createGoal(String name, double targetAmount, double initialSaved){
 

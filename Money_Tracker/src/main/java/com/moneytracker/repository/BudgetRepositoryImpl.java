@@ -2,7 +2,7 @@ package com.moneytracker.repository;
 
 import com.moneytracker.models.Budget;
 
-public class BudgetRepository implements IBudgetRepository {
+public class BudgetRepositoryImpl implements IBudgetRepository {
 
     @Override
     public void createBudget(double amount, int month, int year){

@@ -4,6 +4,6 @@ import com.moneytracker.models.User;
 
 public interface IUserRepository {
 
-    User FindUser(String username, String password);
+    User findUser(String username, String password);
 
 }
