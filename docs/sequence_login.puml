@@ -1,0 +1,21 @@
+@startuml
+actor User
+boundary "Login UI" as LoginUI
+control "UserService" as UserService
+database "SQLite users" as Users
+boundary "Dashboard UI" as Dashboard
+
+User -> LoginUI : enter username/password
+LoginUI -> UserService : login(username, password)
+UserService -> Users : find user by credentials
+
+alt valid credentials
+  Users --> UserService : User(id, username, permissions)
+  UserService --> LoginUI : user
+  LoginUI -> Dashboard : open with user id
+else invalid credentials
+  Users --> UserService : empty
+  UserService --> LoginUI : null / attempts++
+  LoginUI --> User : show error
+end
+@enduml

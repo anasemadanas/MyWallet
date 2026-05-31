@@ -1,0 +1,39 @@
+@startuml
+left to right direction
+
+actor User
+actor Admin
+
+rectangle "MyWallet" {
+  usecase "Login" as UC_Login
+  usecase "Create User" as UC_CreateUser
+  usecase "Forgot Password" as UC_ForgotPassword
+  usecase "View Dashboard" as UC_Dashboard
+  usecase "Create Budget" as UC_Budget
+  usecase "Add Transaction" as UC_AddTransaction
+  usecase "List Transactions" as UC_ListTransactions
+  usecase "Edit Transaction" as UC_EditTransaction
+  usecase "Delete Transaction" as UC_DeleteTransaction
+  usecase "Create Goal" as UC_CreateGoal
+  usecase "Add Savings" as UC_AddSavings
+  usecase "Delete Goal" as UC_DeleteGoal
+}
+
+User --> UC_Login
+User --> UC_CreateUser
+User --> UC_ForgotPassword
+User --> UC_Dashboard
+User --> UC_Budget
+User --> UC_AddTransaction
+User --> UC_ListTransactions
+User --> UC_EditTransaction
+User --> UC_DeleteTransaction
+User --> UC_CreateGoal
+User --> UC_AddSavings
+User --> UC_DeleteGoal
+
+Admin --|> User
+
+UC_AddTransaction ..> UC_Budget : requires monthly budget
+UC_Dashboard ..> UC_ListTransactions : summarizes
+@enduml

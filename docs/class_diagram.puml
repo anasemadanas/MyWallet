@@ -1,0 +1,70 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+  +int id
+  +String username
+  +int permissions
+}
+
+class Budget {
+  +Integer id
+  +double amount
+  +double totalAmount
+  +int month
+  +int year
+}
+
+class Transaction {
+  +Integer id
+  +double amount
+  +String category
+  +int month
+  +int year
+}
+
+class Goal {
+  +Integer id
+  +String name
+  +double targetAmount
+  +double savedAmount
+  +int getProgressPercent()
+}
+
+interface IUserRepository
+interface IBudgetRepository
+interface ITransactionRepository
+interface IGoalRepository
+
+class UserRepositoryImpl
+class BudgetRepositoryImpl
+class TransactionRepositoryImpl
+class GoalRepositoryImpl
+
+class UserService
+class BudgetService
+class TransactionService
+class GoalService
+class DashBoardService
+class DatabaseManager
+class DatabaseSetup
+
+IUserRepository <|.. UserRepositoryImpl
+IBudgetRepository <|.. BudgetRepositoryImpl
+ITransactionRepository <|.. TransactionRepositoryImpl
+IGoalRepository <|.. GoalRepositoryImpl
+
+UserService --> IUserRepository
+BudgetService --> IBudgetRepository
+TransactionService --> ITransactionRepository
+TransactionService --> BudgetService
+GoalService --> IGoalRepository
+DashBoardService --> ITransactionRepository
+DashBoardService --> BudgetService
+
+UserRepositoryImpl --> DatabaseManager
+BudgetRepositoryImpl --> DatabaseManager
+TransactionRepositoryImpl --> DatabaseManager
+GoalRepositoryImpl --> DatabaseManager
+DatabaseSetup --> DatabaseManager
+@enduml

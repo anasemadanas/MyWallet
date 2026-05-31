@@ -1,0 +1,48 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity users {
+  * id : INTEGER <<PK>>
+  --
+  * username : TEXT <<UNIQUE>>
+  * password : TEXT
+  * permissions : INTEGER
+  * recovery_answer : TEXT
+}
+
+entity budgets {
+  * id : INTEGER <<PK>>
+  --
+  * user_id : INTEGER <<FK>>
+  * amount : REAL
+  * month : INTEGER
+  * year : INTEGER
+  * total_amount : REAL
+  --
+  UNIQUE(user_id, month, year)
+}
+
+entity transactions {
+  * id : INTEGER <<PK>>
+  --
+  * user_id : INTEGER <<FK>>
+  * amount : REAL
+  * category : TEXT
+  * month : INTEGER
+  * year : INTEGER
+}
+
+entity goals {
+  * id : INTEGER <<PK>>
+  --
+  * user_id : INTEGER <<FK>>
+  * name : TEXT
+  * target_amount : REAL
+  * saved_amount : REAL
+}
+
+users ||--o{ budgets : owns
+users ||--o{ transactions : owns
+users ||--o{ goals : owns
+@enduml

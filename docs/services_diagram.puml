@@ -1,0 +1,49 @@
+@startuml
+left to right direction
+
+package "UI Layer" {
+  [Login Screen]
+  [Dashboard]
+  [Budget Form]
+  [Transaction Form]
+  [Transaction List]
+  [Goals Screen]
+}
+
+package "Service Layer" {
+  [UserService]
+  [BudgetService]
+  [TransactionService]
+  [GoalService]
+  [DashBoardService]
+}
+
+package "Repository Layer" {
+  [UserRepository]
+  [BudgetRepository]
+  [TransactionRepository]
+  [GoalRepository]
+}
+
+database "SQLite" as SQLite
+
+[Login Screen] --> [UserService]
+[Dashboard] --> [DashBoardService]
+[Budget Form] --> [BudgetService]
+[Transaction Form] --> [TransactionService]
+[Transaction List] --> [TransactionService]
+[Goals Screen] --> [GoalService]
+
+[UserService] --> [UserRepository]
+[BudgetService] --> [BudgetRepository]
+[TransactionService] --> [TransactionRepository]
+[TransactionService] --> [BudgetService]
+[GoalService] --> [GoalRepository]
+[DashBoardService] --> [TransactionRepository]
+[DashBoardService] --> [BudgetService]
+
+[UserRepository] --> SQLite
+[BudgetRepository] --> SQLite
+[TransactionRepository] --> SQLite
+[GoalRepository] --> SQLite
+@enduml

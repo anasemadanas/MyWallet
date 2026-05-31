@@ -1,0 +1,167 @@
+name: Build Desktop Installers
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "money_track/**"
+      - ".github/workflows/build.yml"
+  pull_request:
+    paths:
+      - "money_track/**"
+      - ".github/workflows/build.yml"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact_name: windows-x64
+          - os: ubuntu-latest
+            artifact_name: linux-x64
+          - os: macos-14
+            artifact_name: macos-arm64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Build JAR
+        run: |
+          cd money_track
+          mvn clean package -DskipTests
+          mkdir -p target/installer-input
+          cp target/money-tracker-*.jar target/installer-input/mywallet.jar
+        shell: bash
+
+      - name: Install Linux Packaging Dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fakeroot rpm
+        shell: bash
+
+      - name: Build Linux Packages
+        if: runner.os == 'Linux'
+        run: |
+          cd money_track
+
+          jpackage \
+            --type app-image \
+            --name MyWallet \
+            --input target/installer-input \
+            --main-jar mywallet.jar \
+            --main-class com.moneytracker.Main \
+            --dest output
+
+          tar -C output -czf output/MyWallet-linux-x64.tar.gz MyWallet
+
+          jpackage \
+            --type deb \
+            --name MyWallet \
+            --input target/installer-input \
+            --main-jar mywallet.jar \
+            --main-class com.moneytracker.Main \
+            --dest output \
+            --linux-shortcut \
+            --linux-menu-group Office \
+            --linux-app-category Office
+
+          jpackage \
+            --type rpm \
+            --name MyWallet \
+            --input target/installer-input \
+            --main-jar mywallet.jar \
+            --main-class com.moneytracker.Main \
+            --dest output \
+            --linux-shortcut \
+            --linux-menu-group Office \
+            --linux-app-category Office
+        shell: bash
+
+      - name: Install WiX
+        if: runner.os == 'Windows'
+        run: choco install wixtoolset --yes
+
+      - name: Build Windows Packages
+        if: runner.os == 'Windows'
+        run: |
+          cd money_track
+
+          jpackage ^
+            --type app-image ^
+            --name MyWallet ^
+            --input target/installer-input ^
+            --main-jar mywallet.jar ^
+            --main-class com.moneytracker.Main ^
+            --dest output/app-image
+
+          jpackage ^
+            --type exe ^
+            --name MyWallet ^
+            --input target/installer-input ^
+            --main-jar mywallet.jar ^
+            --main-class com.moneytracker.Main ^
+            --dest output ^
+            --win-dir-chooser ^
+            --win-menu ^
+            --win-shortcut
+
+          jpackage ^
+            --type msi ^
+            --name MyWallet ^
+            --input target/installer-input ^
+            --main-jar mywallet.jar ^
+            --main-class com.moneytracker.Main ^
+            --dest output ^
+            --win-dir-chooser ^
+            --win-shortcut ^
+            --win-menu ^
+            --win-menu-group "MyWallet"
+        shell: cmd
+
+      - name: Build macOS Packages
+        if: runner.os == 'macOS'
+        run: |
+          cd money_track
+
+          jpackage \
+            --type app-image \
+            --name MyWallet \
+            --input target/installer-input \
+            --main-jar mywallet.jar \
+            --main-class com.moneytracker.Main \
+            --dest output \
+            --mac-package-name "MyWallet" \
+            --mac-package-identifier com.moneytracker.mywallet
+
+          jpackage \
+            --type dmg \
+            --name MyWallet \
+            --input target/installer-input \
+            --main-jar mywallet.jar \
+            --main-class com.moneytracker.Main \
+            --dest output \
+            --mac-package-name "MyWallet" \
+            --mac-package-identifier com.moneytracker.mywallet
+
+          mv output/MyWallet.app output/MyWallet-${{ matrix.artifact_name }}.app
+          mv output/MyWallet-1.0.dmg output/MyWallet-${{ matrix.artifact_name }}.dmg
+        shell: bash
+
+      - name: Upload Installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyWallet-${{ matrix.artifact_name }}
+          path: money_track/output/

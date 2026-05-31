@@ -1,0 +1,23 @@
+@startuml
+actor User
+boundary "Transaction UI" as TxUI
+control "TransactionService" as TxService
+control "BudgetService" as BudgetService
+database "SQLite" as DB
+
+User -> TxUI : add amount/category/month/year
+TxUI -> TxService : addTransaction(userId, amount, category, month, year)
+TxService -> BudgetService : getBudget(userId, month, year)
+BudgetService -> DB : select budget by user/month/year
+DB --> BudgetService : budget
+
+alt budget exists and amount <= remaining
+  TxService -> DB : insert transaction(user_id, amount, category, month, year)
+  TxService -> DB : update budget amount = amount - transaction
+  TxService --> TxUI : success
+  TxUI --> User : show saved
+else no budget or over budget
+  TxService --> TxUI : validation error
+  TxUI --> User : show error
+end
+@enduml
