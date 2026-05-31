@@ -2,14 +2,7 @@ name: Build Desktop Installers
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - "money_track/**"
-      - ".github/workflows/build.yml"
-  pull_request:
-    paths:
-      - "money_track/**"
-      - ".github/workflows/build.yml"
+
 
 jobs:
   build:
