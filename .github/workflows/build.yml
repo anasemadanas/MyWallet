@@ -35,7 +35,7 @@ jobs:
           cd money_track
           mvn clean package -DskipTests
           mkdir -p target/installer-input
-          cp target/money-tracker-*.jar target/installer-input/mywallet.jar
+          cp target/mywallet.jar target/installer-input/mywallet.jar
         shell: bash
 
       - name: Install Linux Packaging Dependencies

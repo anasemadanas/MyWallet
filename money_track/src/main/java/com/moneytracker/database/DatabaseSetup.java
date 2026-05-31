@@ -10,8 +10,13 @@ public class DatabaseSetup {
     }
 
     public static void initialize() {
+        boolean existingDatabase = DatabaseManager.databaseExists();
         try (Connection connection = DatabaseManager.getConnection();
              Statement statement = connection.createStatement()) {
+            if (existingDatabase && schemaIsReady(statement)) {
+                return;
+            }
+
             statement.executeUpdate("""
                     CREATE TABLE IF NOT EXISTS users (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,7 +28,8 @@ public class DatabaseSetup {
                     """);
 
             addColumnIfMissing(statement, "users", "recovery_answer", "TEXT NOT NULL DEFAULT ''");
-            seedUsers(statement);
+            seedUsersIfEmpty(statement);
+            statement.executeUpdate("UPDATE users SET recovery_answer = username WHERE recovery_answer = ''");
             migrateBudgets(statement);
             migrateTransactions(statement);
             migrateGoals(statement);
@@ -36,7 +42,46 @@ public class DatabaseSetup {
         }
     }
 
-    private static void seedUsers(Statement statement) throws SQLException {
+    private static boolean schemaIsReady(Statement statement) throws SQLException {
+        return hasColumns(statement, "users", "id", "username", "password", "permissions", "recovery_answer")
+                && hasColumns(statement, "budgets", "id", "user_id", "amount", "month", "year", "total_amount")
+                && hasColumns(statement, "transactions", "id", "user_id", "amount", "category", "month", "year")
+                && hasColumns(statement, "goals", "id", "user_id", "name", "target_amount", "saved_amount")
+                && indexExists(statement, "idx_transactions_user_month_year")
+                && indexExists(statement, "idx_budgets_user_month_year")
+                && indexExists(statement, "idx_goals_user");
+    }
+
+    private static boolean hasColumns(Statement statement, String table, String... expectedColumns) throws SQLException {
+        java.util.Set<String> columns = new java.util.HashSet<>();
+        try (ResultSet resultSet = statement.executeQuery("PRAGMA table_info(" + table + ")")) {
+            while (resultSet.next()) {
+                columns.add(resultSet.getString("name").toLowerCase(java.util.Locale.ROOT));
+            }
+        }
+
+        for (String expectedColumn : expectedColumns) {
+            if (!columns.contains(expectedColumn.toLowerCase(java.util.Locale.ROOT))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean indexExists(Statement statement, String indexName) throws SQLException {
+        try (ResultSet resultSet = statement.executeQuery(
+                "SELECT 1 FROM sqlite_master WHERE type = 'index' AND name = '" + indexName + "'")) {
+            return resultSet.next();
+        }
+    }
+
+    private static void seedUsersIfEmpty(Statement statement) throws SQLException {
+        try (ResultSet resultSet = statement.executeQuery("SELECT 1 FROM users LIMIT 1")) {
+            if (resultSet.next()) {
+                return;
+            }
+        }
+
         statement.executeUpdate("""
                 INSERT OR IGNORE INTO users (username, password, permissions, recovery_answer)
                 VALUES
@@ -45,7 +90,6 @@ public class DatabaseSetup {
                 ('zaid', 'zaid', 7, 'zaid'),
                 ('hamza', '9999', 7, 'hamza')
                 """);
-        statement.executeUpdate("UPDATE users SET recovery_answer = username WHERE recovery_answer = ''");
     }
 
     private static void migrateBudgets(Statement statement) throws SQLException {
