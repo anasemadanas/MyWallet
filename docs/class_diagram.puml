@@ -1,58 +1,270 @@
 @startuml
+title MyWallet Class Diagram
 skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+hide empty members
 
-class User {
-  +int id
-  +String username
-  +int permissions
+package "Desktop app: money_track" {
+  package "UI" {
+    class frmLoginScreen <<JFrame>>
+    class frmDashBoard <<JFrame>>
+    class frmAddBudget <<JPanel>>
+    class frmAddTransaction <<JPanel>>
+    class frmListTransaction <<JPanel>>
+    class frmGoals <<JPanel>>
+  }
+
+  package "Services" {
+    interface IUserService {
+      +login(username, password) : User
+      +createUser(username, password, confirmPassword, recoveryAnswer) : User
+      +resetPassword(username, recoveryAnswer, newPassword, confirmPassword) : boolean
+    }
+
+    interface IBudgetService {
+      +createBudget(amount, month, year) : void
+      +validateBudget(amount, month, year) : boolean
+      +checkBudget(month, year) : boolean
+      +addToBudget(amount, month, year) : void
+      +deductFromBudget(amount, month, year) : void
+      +getBudgetBalance(month, year) : double
+    }
+
+    interface ITransactionService {
+      +addTransaction(amountTrans, category, month, year) : void
+      +validateTransaction(amountTrans, month, year, budget) : boolean
+      +editTransaction(tid, newAmount, month, year) : void
+      +deleteTransaction(transactionId) : void
+      +getTransactions() : List<Transaction>
+      +getBudgetBalance(month, year) : double
+    }
+
+    interface IGoalService {
+      +addGoal(name, targetAmount, initialSaved) : void
+      +addSavings(goalId, amount) : void
+      +deleteGoal(goalId) : void
+      +getAllGoals() : List<Goal>
+    }
+
+    interface IDashBoardService {
+      +getBudgetSummary(month, year) : String
+      +getBudgetForCategory(month, year) : Map<String, Double>
+      +getTransactionsForMonth(month, year) : List<Transaction>
+      +exportData(month, year) : void
+    }
+
+    class UserService {
+      -userRepo : IUserRepository
+      -loginAttempts : int
+      -maxAttempts : int
+    }
+
+    class BudgetService {
+      -budgetRepository : IBudgetRepository
+      +getBudget(month, year) : Budget
+      {static} ~validateMonthYear(month, year) : void
+    }
+
+    class TransactionService {
+      -transactionRepository : ITransactionRepository
+      -budgetService : BudgetService
+      +getBudgetWarning(amountTrans, month, year) : String
+      +getTransactionWarning(oldAmount, newAmount) : String
+    }
+
+    class GoalService {
+      -goalRepository : IGoalRepository
+    }
+
+    class DashBoardService {
+      -transactionRepository : ITransactionRepository
+      -budgetService : BudgetService
+    }
+  }
+
+  package "Repositories" {
+    interface IUserRepository {
+      +findUser(username, password) : User
+      +usernameExists(username) : boolean
+      +createUser(username, password, recoveryAnswer) : User
+      +resetPassword(username, recoveryAnswer, newPassword) : boolean
+    }
+
+    interface IBudgetRepository {
+      +createBudget(amount, month, year) : void
+      +checkBudget(month, year) : boolean
+      +addToBudget(amount, month, year) : void
+      +deductFromBudget(amountSpent, month, year) : void
+      +getBudget(month, year) : Budget
+      +getBudgetBalance(month, year) : double
+    }
+
+    interface ITransactionRepository {
+      +addTransaction(transaction) : void
+      +deleteTransaction(transactionId) : void
+      +updateTransaction(transactionId, newAmount, newMonth, newYear) : void
+      +getTransactions() : List<Transaction>
+      +getTransactionById(transactionId) : Transaction
+      +getTransactionsByMonth(month, year) : List<Transaction>
+    }
+
+    interface IGoalRepository {
+      +createGoal(name, targetAmount, initialSaved) : void
+      +addSavings(goalId, amount) : void
+      +deleteGoal(goalId) : void
+      +getAllGoals() : List<Goal>
+    }
+
+    class UserRepositoryImpl
+    class BudgetRepositoryImpl {
+      -userId : int
+    }
+    class TransactionRepositoryImpl {
+      -userId : int
+    }
+    class GoalRepositoryImpl {
+      -userId : int
+    }
+  }
+
+  package "Models" {
+    class User {
+      -id : int
+      -username : String
+      -permissions : int
+      +getId() : int
+      +getUsername() : String
+      +getPermissions() : int
+    }
+
+    class Budget {
+      -id : Integer
+      -amount : double
+      -totalAmount : double
+      -month : int
+      -year : int
+    }
+
+    class Transaction {
+      -id : Integer
+      -amount : double
+      -category : String
+      -month : int
+      -year : int
+    }
+
+    class Goal {
+      -id : Integer
+      -name : String
+      -targetAmount : double
+      -savedAmount : double
+      +getProgressPercent() : int
+      +isComplete() : boolean
+    }
+
+    enum Permissions {
+      ADD_TRANSACTION
+      ADD_BUDGET
+      LIST_TRANSACTION
+      +hasPermission(userPermissions, permission) : boolean
+    }
+  }
+
+  package "Database/Common" {
+    class DatabaseSetup {
+      {static} +initialize() : void
+    }
+
+    class DatabaseManager {
+      {static} +getConnection() : Connection
+      {static} +databaseExists() : boolean
+      {static} +getDatabaseFile() : Path
+    }
+
+    class GlobalUser
+    class AppPaths
+    class Logger
+  }
 }
 
-class Budget {
-  +Integer id
-  +double amount
-  +double totalAmount
-  +int month
-  +int year
+package "Android app: mywallet_android" {
+  class MainActivity <<Activity>> {
+    -database : WalletDatabase
+    -currentUser : User
+    -showLogin() : void
+    -showDashboard() : void
+    -showAddBudget() : void
+    -showAddTransaction() : void
+    -showTransactions() : void
+    -showGoals() : void
+  }
+
+  class WalletDatabase <<SQLiteOpenHelper>> {
+    +login(username, password) : User
+    +createUser(username, password, recoveryAnswer) : User
+    +resetPassword(username, recoveryAnswer, newPassword) : boolean
+    +getBudget(userId, month, year) : Budget
+    +addBudget(userId, amount, month, year) : void
+    +addTransaction(userId, amount, category, month, year) : void
+    +getTransactions(userId) : List<WalletTransaction>
+    +deleteTransaction(userId, transaction) : void
+    +getGoals(userId) : List<Goal>
+    +addGoal(userId, name, target, saved) : void
+    +addSavings(userId, goal, amount) : void
+    +deleteGoal(userId, goal) : void
+  }
+
+  class "Android User" as AndroidUser {
+    +id : int
+    +username : String
+    +permissions : int
+  }
+
+  class "Android Budget" as AndroidBudget {
+    +id : int
+    +amount : double
+    +totalAmount : double
+    +month : int
+    +year : int
+  }
+
+  class WalletTransaction {
+    +id : int
+    +amount : double
+    +category : String
+    +month : int
+    +year : int
+  }
+
+  class "Android Goal" as AndroidGoal {
+    +id : int
+    +name : String
+    +targetAmount : double
+    +savedAmount : double
+    +progressPercent() : int
+  }
 }
 
-class Transaction {
-  +Integer id
-  +double amount
-  +String category
-  +int month
-  +int year
-}
-
-class Goal {
-  +Integer id
-  +String name
-  +double targetAmount
-  +double savedAmount
-  +int getProgressPercent()
-}
-
-interface IUserRepository
-interface IBudgetRepository
-interface ITransactionRepository
-interface IGoalRepository
-
-class UserRepositoryImpl
-class BudgetRepositoryImpl
-class TransactionRepositoryImpl
-class GoalRepositoryImpl
-
-class UserService
-class BudgetService
-class TransactionService
-class GoalService
-class DashBoardService
-class DatabaseManager
-class DatabaseSetup
+IUserService <|.. UserService
+IBudgetService <|.. BudgetService
+ITransactionService <|.. TransactionService
+IGoalService <|.. GoalService
+IDashBoardService <|.. DashBoardService
 
 IUserRepository <|.. UserRepositoryImpl
 IBudgetRepository <|.. BudgetRepositoryImpl
 ITransactionRepository <|.. TransactionRepositoryImpl
 IGoalRepository <|.. GoalRepositoryImpl
+
+frmLoginScreen --> UserService
+frmDashBoard --> DashBoardService
+frmDashBoard --> BudgetService
+frmDashBoard --> TransactionService
+frmDashBoard --> GoalService
+frmAddBudget --> BudgetService
+frmAddTransaction --> TransactionService
+frmListTransaction --> TransactionService
+frmGoals --> GoalService
 
 UserService --> IUserRepository
 BudgetService --> IBudgetRepository
@@ -67,4 +279,17 @@ BudgetRepositoryImpl --> DatabaseManager
 TransactionRepositoryImpl --> DatabaseManager
 GoalRepositoryImpl --> DatabaseManager
 DatabaseSetup --> DatabaseManager
+DatabaseManager --> AppPaths
+
+UserRepositoryImpl ..> User
+BudgetRepositoryImpl ..> Budget
+TransactionRepositoryImpl ..> Transaction
+GoalRepositoryImpl ..> Goal
+
+MainActivity --> WalletDatabase
+MainActivity --> AndroidUser
+WalletDatabase ..> AndroidUser
+WalletDatabase ..> AndroidBudget
+WalletDatabase ..> WalletTransaction
+WalletDatabase ..> AndroidGoal
 @enduml

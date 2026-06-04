@@ -1,0 +1,59 @@
+@startuml
+title Budget and Transaction Activity
+
+|User|
+start
+:Open dashboard;
+
+|Application|
+:Load selected month and year;
+
+|User|
+if (Budget exists for month?) then (No / add budget)
+  :Enter budget amount,\nmonth, and year;
+
+  |BudgetService / WalletDatabase|
+  :Validate positive amount;
+  :Validate month and year;
+
+  if (Budget is valid?) then (yes)
+    |SQLite|
+    :Insert budget or add to\nexisting monthly budget;
+
+    |Application|
+    :Refresh dashboard balance;
+  else (no)
+    |Application|
+    :Show budget validation error;
+    stop
+  endif
+endif
+
+|User|
+:Enter transaction amount,\ncategory, month, and year;
+
+|TransactionService / WalletDatabase|
+:Validate amount, month, and year;
+:Load monthly budget;
+
+if (Monthly budget exists?) then (yes)
+  if (Amount is within remaining budget?) then (yes)
+    |SQLite|
+    :Insert transaction;
+    :Deduct amount from budget balance;
+
+    |Application|
+    :Refresh dashboard and transaction list;
+    :Show saved message;
+    stop
+  else (no)
+    |Application|
+    :Show over-budget error;
+    stop
+  endif
+else (no)
+  |Application|
+  :Show missing-budget error;
+  stop
+endif
+@enduml

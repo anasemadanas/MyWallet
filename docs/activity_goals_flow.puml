@@ -1,0 +1,77 @@
+@startuml
+title Savings Goals Activity
+
+|User|
+start
+:Open goals screen;
+
+|Application|
+:Request goals for current user;
+
+|GoalService / WalletDatabase|
+:Load goals;
+
+|SQLite|
+:Return saved goals;
+
+|Application|
+:Render goal table with progress;
+
+|User|
+if (Choose action?) then (Create goal)
+  :Enter goal name,\ntarget amount, initial saved;
+
+  |GoalService / WalletDatabase|
+  :Validate goal details;
+
+  if (Details valid?) then (yes)
+    |SQLite|
+    :Insert goal;
+
+    |Application|
+    :Refresh goals list;
+    stop
+  else (no)
+    |Application|
+    :Show validation error;
+    stop
+  endif
+
+elseif (Add savings)
+  :Select goal and enter amount;
+
+  |GoalService / WalletDatabase|
+  :Validate amount;
+  :Calculate new saved total;
+
+  |SQLite|
+  :Update saved amount;
+
+  |Application|
+  :Refresh progress;
+  stop
+
+else (Delete goal)
+  :Select goal;
+
+  |Application|
+  :Ask for confirmation;
+
+  |User|
+  if (Confirm delete?) then (yes)
+    |GoalService / WalletDatabase|
+    :Delete selected goal;
+
+    |SQLite|
+    :Remove goal row;
+
+    |Application|
+    :Refresh goals list;
+    stop
+  else (no)
+    |Application|
+    :Keep goal unchanged;
+    stop
+  endif
+endif
+@enduml

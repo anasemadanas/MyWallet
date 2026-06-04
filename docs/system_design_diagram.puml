@@ -1,0 +1,53 @@
+@startuml
+title MyWallet System Design
+left to right direction
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+
+actor "End User" as User
+
+node "Desktop Environment" {
+  package "money_track\nJava Swing App" as Desktop {
+    [Swing Screens] as SwingUI
+    [Service Layer] as Services
+    [Repository Layer] as Repositories
+    [JDBC DatabaseManager] as JDBC
+  }
+
+  database "SQLite\nmoney_tracker.db" as DesktopDb
+  folder "App Data\nlogs + CSV exports" as AppData
+}
+
+node "Android Device" {
+  package "mywallet_android\nNative Java App" as Android {
+    [MainActivity] as AndroidUI
+    [WalletDatabase\nSQLiteOpenHelper] as WalletDbHelper
+  }
+
+  database "SQLite\nmywallet.db" as AndroidDb
+}
+
+cloud "GitHub Actions CI" as CI {
+  [Maven Tests] as MavenTests
+  [Desktop Installers] as Installers
+  [Android Debug APK] as Apk
+}
+
+User --> SwingUI : desktop workflows
+User --> AndroidUI : mobile workflows
+
+SwingUI --> Services : validate commands\nload summaries
+Services --> Repositories : persistence contracts
+Repositories --> JDBC : SQL queries and updates
+JDBC --> DesktopDb : JDBC connection\nforeign keys enabled
+Services --> AppData : CSV export\nlogs
+
+AndroidUI --> WalletDbHelper : direct CRUD calls
+WalletDbHelper --> AndroidDb : SQLiteOpenHelper\nforeign keys enabled
+
+DesktopDb .. AndroidDb : same logical schema\nusers, budgets,\ntransactions, goals
+
+CI --> MavenTests : mvn test
+CI --> Installers : package desktop app
+CI --> Apk : Gradle build
+@enduml

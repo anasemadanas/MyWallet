@@ -1,0 +1,88 @@
+@startuml
+title Authentication Activity
+
+|User|
+start
+:Open MyWallet;
+
+|Application|
+:Initialize SQLite schema;
+:Show login screen;
+
+|User|
+if (Choose account action?) then (Login)
+  :Enter username and password;
+
+  |Auth Service / WalletDatabase|
+  :Normalize username;
+  if (Too many failed attempts?) then (yes)
+    :Reject login;
+
+    |Application|
+    :Show lockout error;
+    stop
+  else (no)
+    :Query users table by credentials;
+  endif
+
+  |SQLite|
+  :Return matching user or empty result;
+
+  |Auth Service / WalletDatabase|
+  if (Credentials valid?) then (yes)
+    :Reset login attempts;
+    :Return authenticated user;
+
+    |Application|
+    :Store current user;
+    :Open dashboard;
+    stop
+  else (no)
+    :Increment login attempts;
+
+    |Application|
+    :Show invalid login error;
+    stop
+  endif
+
+elseif (Create user)
+  :Enter username, password,\nconfirmation, recovery answer;
+
+  |Auth Service / WalletDatabase|
+  :Validate username and password;
+  :Check username availability;
+
+  if (Input valid and username free?) then (yes)
+    |SQLite|
+    :Insert user with default permissions;
+
+    |Application|
+    :Open dashboard for new user;
+    stop
+  else (no)
+    |Application|
+    :Show validation error;
+    stop
+  endif
+
+else (Forgot password)
+  :Enter username, recovery answer,\nnew password and confirmation;
+
+  |Auth Service / WalletDatabase|
+  :Validate username and password;
+  :Match recovery answer;
+
+  if (Recovery answer matches?) then (yes)
+    |SQLite|
+    :Update password;
+
+    |Application|
+    :Show reset success;
+    stop
+  else (no)
+    |Application|
+    :Show reset failure;
+    stop
+  endif
+endif
+@enduml
